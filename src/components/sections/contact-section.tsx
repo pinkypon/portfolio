@@ -1,7 +1,7 @@
 import React from "react";
 import ShinyText from "../ShinyText";
 import StarBorder from "../star-border";
-import Beams from "../Beams";
+import Beams from "../beams";
 
 const ContactSection: React.FC = () => {
   return (
