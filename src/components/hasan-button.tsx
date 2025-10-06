@@ -5,11 +5,16 @@ import { Github, Download, Linkedin } from "lucide-react";
 const Button = () => {
   return (
     <StyledWrapper>
-      <button className="button">
+      <a
+        href="../../cv/jem.pdf"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="button"
+      >
         <div className="dots_border" />
         <Download className="sparkle w-4 h-4" />
-        <span className="text_button">Download</span>
-      </button>
+        <span className="text_button">Download CV</span>
+      </a>
     </StyledWrapper>
   );
 };
@@ -26,11 +31,13 @@ const StyledWrapper = styled.div`
 
     display: flex;
     align-items: center;
-    gap: 0.1rem;
+    justify-content: center;
+
+    gap: rem;
 
     transform-origin: center;
 
-    padding: 0.75rem 0.6rem;
+    padding: 0.5rem 0.6rem;
     --black-700: #171717;
 
     border: none;
@@ -119,7 +126,7 @@ const StyledWrapper = styled.div`
     background-color: white;
 
     mask: linear-gradient(transparent 0%, white 120%);
-    animation: rotate 10s linear infinite;
+    animation: rotate 20s linear infinite;
   }
 
   @keyframes rotate {
@@ -177,7 +184,6 @@ const StyledWrapper = styled.div`
     z-index: 10;
 
     font-size: 14px;
-    font-weight: bold;
     color: oklch(98.5% 0.002 247.839); /* solid white text */
   }
 `;

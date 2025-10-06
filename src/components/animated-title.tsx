@@ -4,7 +4,7 @@ const AnimatedTitle: React.FC = () => {
   const [currentTitle, setCurrentTitle] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
 
-  const titles = ["Full Stack Developer", "Software Engineer"];
+  const titles = ["Full Stack Developer", "Software Developer"];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -19,7 +19,7 @@ const AnimatedTitle: React.FC = () => {
   }, []);
 
   return (
-    <h1 className="text-4xl sm:text-5xl md:text-5xl font-bold text-white h-16 sm:h-20 md:h-15 flex items-center justify-center text-center">
+    <h1 className="text-3xl font-semibold sm:text-5xl text-white h-10 sm:h-11 md:h-12 flex items-center justify-center text-center">
       <span
         className={`transition-all duration-500 ${
           isAnimating

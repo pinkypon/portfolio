@@ -5,12 +5,14 @@ interface ButtonProps {
   icon?: "github" | "download" | "linkedin";
   label?: string;
   onClick?: () => void;
+  url?: string;
 }
 
 const Button = ({
   icon = "github",
   label = "Button",
   onClick,
+  url,
 }: ButtonProps) => {
   const icons: Record<string, React.ReactNode> = {
     github: (
@@ -30,10 +32,13 @@ const Button = ({
   };
 
   return (
-    <button
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
       onClick={onClick}
-      className="group flex justify-center items-center gap-2 duration-500 hover:text-neutral-300 relative bg-neutral-900 px-5 
-      py-3 text-left p-3 text-gray-50 text-sm font-bold rounded-lg 
+      className="group flex justify-center items-center gap-2 duration-500 hover:text-neutral-300 relative bg-neutral-900 px-3 
+      py-2 text-left p-3 text-gray-50 text-sm rounded-lg 
       overflow-hidden after:absolute after:z-10 after:w-12 after:h-12 after:content-[''] 
       after:bg-sky-900 after:-left-8 after:top-8 after:rounded-full after:blur-lg after:animate-pulse 
       hover:after:animate-none cursor-pointer shadow-[0_4px_6px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.1)]"
@@ -44,7 +49,7 @@ const Button = ({
         {/* Smooth underline */}
         <span className="absolute left-0 -bottom-1 w-0 h-[2px] bg-gray-400 transition-all duration-300 group-hover:w-full"></span>
       </span>
-    </button>
+    </a>
   );
 };
 
