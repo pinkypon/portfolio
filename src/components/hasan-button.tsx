@@ -13,7 +13,7 @@ const Button = () => {
       >
         <div className="dots_border" />
         <Download className="sparkle w-4 h-4" />
-        <span className="text_button">Download CV</span>
+        <span className="text_button">View CV</span>
       </a>
     </StyledWrapper>
   );

@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import ShinyText from "../components/ShinyText";
 import StarBorder from "../components/star-border";
+import { useNavigate } from "react-router-dom";
 
 const socialLinks = [
   {
@@ -35,6 +36,7 @@ const socialLinks = [
 export default function SingleProjectPage() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const navigate = useNavigate();
 
   // Single project data
   const project = {
@@ -96,13 +98,13 @@ export default function SingleProjectPage() {
     <div className="min-h-screen bg-black text-white">
       {/* Back Button */}
       <div className="fixed top-6 left-6 z-50">
-        <a
-          href="/#projects"
+        <button
+          onClick={() => navigate(-1)}
           className="flex items-center gap-1 px-2 py-1 bg-black/40 backdrop-blur-md rounded-lg text-gray-300 hover:text-white"
         >
           <ArrowLeft size={10} />
           <span className="text-xs">Back</span>
-        </a>
+        </button>
       </div>
 
       {/* Project Content */}
