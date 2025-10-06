@@ -13,6 +13,7 @@ import ShinyText from "../ShinyText";
 import AnimatedTitle from "../animated-title";
 import Javier from "../git-button";
 import Hasan from "../hasan-button";
+import Particles from "../bg/particles";
 
 const techLogos = [
   {
@@ -44,13 +45,29 @@ const techLogos = [
 
 const HeroSection: React.FC = () => {
   const [copied, setCopied] = useState(false);
+  const isMobile = window.innerWidth < 768;
 
   return (
     <section
       id="home"
       className="min-h-screen flex items-center justify-center relative z-10 md:pt-40"
     >
-      <div className="text-center max-w-4xl mx-auto px-4 sm:px-6">
+      {/* Prism Background - Positioned absolutely behind content */}
+      <div className="absolute inset-0 -z-10 overflow-">
+        <Particles
+          particleColors={["#ffffff", "#ffffff"]}
+          particleCount={isMobile ? 40 : 60} // 👈 Fewer on mobile
+          particleSpread={10}
+          speed={isMobile ? 0.02 : 0.1} // 👈 Slower on mobile
+          particleBaseSize={isMobile ? 120 : 100} // 👈 Larger but fewer
+          moveParticlesOnHover={false}
+          alphaParticles={true}
+          disableRotation={true}
+        />
+      </div>
+
+      {/* Content - Now sits on top of the Prism background */}
+      <div className="text-center max-w-4xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Name */}
         <div className="">
           <h2 className="text-4xl font-semibold sm:text-5xl text-white">

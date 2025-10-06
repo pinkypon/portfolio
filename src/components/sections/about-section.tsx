@@ -120,7 +120,7 @@ const AboutSection: React.FC = () => {
                 <button
                   onClick={() => handleFilterChange("all")}
                   disabled={isAnimating}
-                  className={`relative flex items-center px-4 py-2 sm:py-2 rounded-md transition-all duration-300 overflow-hidden ${
+                  className={`relative flex items-center px-2 py-2 sm:py-2 rounded-md transition-all duration-300 overflow-hidden ${
                     activeFilter === "all"
                       ? "bg-white/10 text-white border-1 border-white/20 backdrop-blur-sm"
                       : "bg-transparent text-gray-400 border-1 border-white/20 backdrop-blur-sm hover:bg-white/10 hover:text-white"
@@ -137,7 +137,7 @@ const AboutSection: React.FC = () => {
                 <button
                   onClick={() => handleFilterChange("experience")}
                   disabled={isAnimating}
-                  className={`relative flex items-center px-4 py-2 sm:py-3 rounded-md transition-all duration-300 overflow-hidden ${
+                  className={`relative flex items-center px-2 py-2 sm:py-3 rounded-md transition-all duration-300 overflow-hidden ${
                     activeFilter === "experience"
                       ? "bg-white/10 text-white border-1 border-white/20 backdrop-blur-sm"
                       : "bg-transparent text-gray-400 border-1 border-white/20 backdrop-blur-sm hover:bg-white/10 hover:text-white"
@@ -154,7 +154,7 @@ const AboutSection: React.FC = () => {
                 <button
                   onClick={() => handleFilterChange("education")}
                   disabled={isAnimating}
-                  className={`relative flex items-center px-4 py-2 sm:py-3 rounded-md transition-all duration-300 overflow-hidden ${
+                  className={`relative flex items-center px-2 py-2 sm:py-3 rounded-md transition-all duration-300 overflow-hidden ${
                     activeFilter === "education"
                       ? "bg-white/10 text-white border-1 border-white/20 backdrop-blur-sm"
                       : "bg-transparent text-gray-400 border-1 border-white/20 backdrop-blur-sm hover:bg-white/10 hover:text-white"
@@ -172,7 +172,7 @@ const AboutSection: React.FC = () => {
             </div>
 
             {/* Timeline */}
-            <div className="h-[80vh] sm:h-[50vh] overflow-y-auto scrollbar-minimal flex justify-center">
+            <div className="h-[80vh] sm:h-[50vh] overflow-y-auto scrollbar-minimal flex justify-center pt-2 pb-2">
               <div className="relative max-w-3xl w-full px-4 sm:px-6">
                 <div className="space-y-8 sm:space-y-10 md:space-y-12">
                   {filteredData.map((item, index) => (
@@ -186,32 +186,34 @@ const AboutSection: React.FC = () => {
                       {/* Circle on Line */}
                       <div className="absolute left-4 sm:left-6 w-2 sm:w-3 h-2 sm:h-3 bg-white rounded-full -translate-x-1/2 mt-2 animate-pulse"></div>
 
-                      {/* Date */}
-                      <div className="flex pl-8 sm:pl-10 w-28 sm:w-28 md:w-32 flex-shrink-0 mt-1">
-                        <span className="text-white text-xs">{item.date}</span>
-                      </div>
-
-                      {/* Details */}
-                      <div className="flex-1 ml-4 sm:ml-6 md:ml-8">
-                        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 sm:mb-4">
-                          <div className="flex-1">
-                            <h3 className="text-md sm:text-xl font-semibold text-white mb-2">
-                              {item.title}
-                            </h3>
-                            <div className="flex items-center mb-3 sm:mb-4 gap-1">
-                              <img
-                                src={item.logo}
-                                alt={`${item.organization} logo`}
-                                className="w-5 h-5 object-contain"
-                              />
-                              <p className="text-gray-400 text-xs">
-                                {item.organization}
-                              </p>
-                            </div>
-                          </div>
+                      {/* Mobile Layout - Stacked vertically */}
+                      <div className="flex-1 pl-8 sm:hidden">
+                        {/* Date */}
+                        <div className="mb-3">
+                          <span className="text-white text-xs">
+                            {item.date}
+                          </span>
                         </div>
 
-                        <ul className="text-gray-300 leading-relaxed mb-4 sm:mb-6 text-sm space-y-2">
+                        {/* Role/Title */}
+                        <h3 className="text-md font-semibold text-white mb-3">
+                          {item.title}
+                        </h3>
+
+                        {/* Organization */}
+                        <div className="flex items-center mb-3 gap-1">
+                          <img
+                            src={item.logo}
+                            alt={`${item.organization} logo`}
+                            className="w-5 h-5 object-contain"
+                          />
+                          <p className="text-gray-400 text-xs">
+                            {item.organization}
+                          </p>
+                        </div>
+
+                        {/* Description */}
+                        <ul className="text-gray-300 leading-relaxed mb-4 text-sm space-y-2">
                           {item.description.map((point, idx) => (
                             <li key={idx} className="flex items-center gap-2">
                               <span className="text-white-400">•</span>
@@ -220,6 +222,7 @@ const AboutSection: React.FC = () => {
                           ))}
                         </ul>
 
+                        {/* Skills */}
                         <div className="flex flex-wrap gap-1.5">
                           {item.skills.map((skill, skillIndex) => (
                             <span
@@ -229,6 +232,55 @@ const AboutSection: React.FC = () => {
                               {skill}
                             </span>
                           ))}
+                        </div>
+                      </div>
+
+                      {/* Desktop Layout - Original horizontal layout */}
+                      <div className="hidden sm:flex flex-1">
+                        {/* Date */}
+                        <div className="flex pl-10 w-28 md:w-32 flex-shrink-0 mt-1">
+                          <span className="text-white text-xs">
+                            {item.date}
+                          </span>
+                        </div>
+
+                        {/* Details */}
+                        <div className="flex-1 ml-6 md:ml-8">
+                          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-3 sm:mb-4">
+                            <div className="flex-1">
+                              <h3 className="text-md sm:text-xl font-semibold text-white mb-2">
+                                {item.title}
+                              </h3>
+                              <div className="flex items-center mb-3 sm:mb-4 gap-1">
+                                <img
+                                  src={item.logo}
+                                  alt={`${item.organization} logo`}
+                                  className="w-5 h-5 object-contain"
+                                />
+                                <p className="text-gray-400 text-xs">
+                                  {item.organization}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          <ul className="text-gray-300 leading-relaxed mb-4 sm:mb-6 text-sm space-y-2">
+                            {item.description.map((point, idx) => (
+                              <li key={idx} className="flex items-center gap-2">
+                                <span className="text-white-400">•</span>
+                                <span>{point}</span>
+                              </li>
+                            ))}
+                          </ul>
+                          <div className="flex flex-wrap gap-1.5">
+                            {item.skills.map((skill, skillIndex) => (
+                              <span
+                                key={skillIndex}
+                                className="px-4 py-1 text-gray-200 rounded-full text-xs border border-gray-600"
+                              >
+                                {skill}
+                              </span>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>

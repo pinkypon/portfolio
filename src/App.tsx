@@ -70,7 +70,7 @@ const Portfolio: React.FC = () => {
       className="min-h-screen bg-black text-white relative overflow-x-hidden"
       style={{ fontFamily: "Inter, system-ui, sans-serif" }}
     >
-      <Starfield />
+      {/* <Starfield /> */}
       <NavigationSection
         scrolled={scrolled}
         activeSection={activeSection}

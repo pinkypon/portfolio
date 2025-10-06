@@ -6,6 +6,7 @@ import {
   useMemo,
   FC,
   ReactNode,
+  useState,
 } from "react";
 
 import * as THREE from "three";
@@ -89,11 +90,44 @@ function extendMaterial<T extends THREE.Material = THREE.Material>(
   return mat;
 }
 
-const CanvasWrapper: FC<{ children: ReactNode }> = ({ children }) => (
-  <Canvas dpr={[1, 2]} frameloop="always" className="w-full h-full relative">
-    {children}
-  </Canvas>
-);
+const CanvasWrapper: FC<{
+  children: ReactNode;
+  onVisibilityChange: (visible: boolean) => void;
+}> = ({ children, onVisibilityChange }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          onVisibilityChange(entry.isIntersecting);
+        });
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [onVisibilityChange]);
+
+  return (
+    <div ref={containerRef} className="w-full h-full relative">
+      <Canvas
+        dpr={[1, 2]}
+        frameloop="always"
+        className="w-full h-full relative"
+      >
+        {children}
+      </Canvas>
+    </div>
+  );
+};
 
 const hexToNormalizedRGB = (hex: string): [number, number, number] => {
   const clean = hex.replace("#", "");
@@ -204,6 +238,7 @@ const Beams: FC<BeamsProps> = ({
   const meshRef = useRef<
     THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>
   >(null!);
+  const [isVisible, setIsVisible] = useState(true);
 
   const beamMaterial = useMemo(
     () =>
@@ -263,7 +298,7 @@ const Beams: FC<BeamsProps> = ({
   );
 
   return (
-    <CanvasWrapper>
+    <CanvasWrapper onVisibilityChange={setIsVisible}>
       <group rotation={[0, 0, degToRad(rotation)]}>
         <PlaneNoise
           ref={meshRef}
@@ -271,6 +306,7 @@ const Beams: FC<BeamsProps> = ({
           count={beamNumber}
           width={beamWidth}
           height={beamHeight}
+          isVisible={isVisible}
         />
         <DirLight color={lightColor} position={[0, 3, 10]} />
       </group>
@@ -345,8 +381,9 @@ const MergedPlanes = forwardRef<
     width: number;
     count: number;
     height: number;
+    isVisible: boolean;
   }
->(({ material, width, count, height }, ref) => {
+>(({ material, width, count, height, isVisible }, ref) => {
   const mesh = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.ShaderMaterial>>(
     null!
   );
@@ -356,7 +393,9 @@ const MergedPlanes = forwardRef<
     [count, width, height]
   );
   useFrame((_, delta) => {
-    mesh.current.material.uniforms.time.value += 0.1 * delta;
+    if (isVisible) {
+      mesh.current.material.uniforms.time.value += 0.1 * delta;
+    }
   });
   return <mesh ref={mesh} geometry={geometry} material={material} />;
 });
@@ -369,6 +408,7 @@ const PlaneNoise = forwardRef<
     width: number;
     count: number;
     height: number;
+    isVisible: boolean;
   }
 >((props, ref) => (
   <MergedPlanes
@@ -377,6 +417,7 @@ const PlaneNoise = forwardRef<
     width={props.width}
     count={props.count}
     height={props.height}
+    isVisible={props.isVisible}
   />
 ));
 PlaneNoise.displayName = "PlaneNoise";

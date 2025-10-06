@@ -93,6 +93,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const isHoveredRef = useRef(false);
+  const isVisibleRef = useRef(true);
 
   const config =
     easing === "elastic"
@@ -154,7 +155,9 @@ const CardSwap: React.FC<CardSwapProps> = ({
         setHoveredCard(null);
         isHoveredRef.current = false;
         // Restart the interval after animation completes
-        startInterval();
+        if (isVisibleRef.current) {
+          startInterval();
+        }
       },
     });
     tlRef.current = tl;
@@ -231,7 +234,13 @@ const CardSwap: React.FC<CardSwapProps> = ({
   };
 
   const swap = () => {
-    if (order.current.length < 2 || isHoveredRef.current || isAnimating) return;
+    if (
+      order.current.length < 2 ||
+      isHoveredRef.current ||
+      isAnimating ||
+      !isVisibleRef.current
+    )
+      return;
 
     const [front, ...rest] = order.current;
     const elFront = refs[front].current!;
@@ -306,6 +315,37 @@ const CardSwap: React.FC<CardSwapProps> = ({
   };
 
   useEffect(() => {
+    const containerEl = container.current;
+    if (!containerEl) return;
+
+    // Set up Intersection Observer
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          isVisibleRef.current = entry.isIntersecting;
+
+          if (entry.isIntersecting) {
+            // Resume animation when visible
+            if (tlRef.current && !isAnimating && !isHoveredRef.current) {
+              tlRef.current.play();
+            }
+            if (!isAnimating && !isHoveredRef.current) {
+              startInterval();
+            }
+          } else {
+            // Pause animation when not visible
+            if (tlRef.current) {
+              tlRef.current.pause();
+            }
+            stopInterval();
+          }
+        });
+      },
+      { threshold: 0 }
+    );
+
+    observer.observe(containerEl);
+
     const total = refs.length;
     refs.forEach((r, i) =>
       placeNow(
@@ -319,24 +359,30 @@ const CardSwap: React.FC<CardSwapProps> = ({
     intervalRef.current = window.setInterval(swap, delay);
 
     if (pauseOnHover) {
-      const node = container.current!;
+      const node = containerEl;
       const pause = () => {
         tlRef.current?.pause();
         clearInterval(intervalRef.current);
       };
       const resume = () => {
-        tlRef.current?.play();
-        intervalRef.current = window.setInterval(swap, delay);
+        if (isVisibleRef.current) {
+          tlRef.current?.play();
+          intervalRef.current = window.setInterval(swap, delay);
+        }
       };
       node.addEventListener("mouseenter", pause);
       node.addEventListener("mouseleave", resume);
       return () => {
+        observer.disconnect();
         node.removeEventListener("mouseenter", pause);
         node.removeEventListener("mouseleave", resume);
         clearInterval(intervalRef.current);
       };
     }
-    return () => clearInterval(intervalRef.current);
+    return () => {
+      observer.disconnect();
+      clearInterval(intervalRef.current);
+    };
   }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
 
   const rendered = childArr.map((child, i) =>
@@ -356,10 +402,10 @@ const CardSwap: React.FC<CardSwapProps> = ({
           onMouseLeave: () => {
             setHoveredCard(null);
             isHoveredRef.current = false;
-            if (tlRef.current && !isAnimating) {
+            if (tlRef.current && !isAnimating && isVisibleRef.current) {
               tlRef.current.play();
             }
-            if (!isAnimating) {
+            if (!isAnimating && isVisibleRef.current) {
               startInterval();
             }
           },
