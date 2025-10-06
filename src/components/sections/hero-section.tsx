@@ -56,10 +56,10 @@ const HeroSection: React.FC = () => {
       <div className="absolute inset-0 -z-10 overflow-">
         <Particles
           particleColors={["#ffffff", "#ffffff"]}
-          particleCount={isMobile ? 40 : 60} // 👈 Fewer on mobile
+          particleCount={40} // 👈 Fewer on mobile
           particleSpread={10}
-          speed={isMobile ? 0.02 : 0.1} // 👈 Slower on mobile
-          particleBaseSize={isMobile ? 120 : 100} // 👈 Larger but fewer
+          speed={0.02} // 👈 Slower on mobile
+          particleBaseSize={120} // 👈 Larger but fewer
           moveParticlesOnHover={false}
           alphaParticles={true}
           disableRotation={true}
